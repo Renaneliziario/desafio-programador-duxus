@@ -1,6 +1,6 @@
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/model/ComposicaoTime.java
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/model/Integrante.java
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/service/ApiService.java
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/model/Time.java
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/DuxusdesafioApplication.java
-/home/renan/dev/desafio-programadorDX/src/main/java/br/com/duxusdesafio/ServletInitializer.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/ServletInitializer.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/model/Integrante.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/service/ApiService.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/model/ComposicaoTime.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/DuxusdesafioApplication.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/model/Time.java
