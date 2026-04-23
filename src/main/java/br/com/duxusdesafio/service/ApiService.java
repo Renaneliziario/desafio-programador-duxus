@@ -1,5 +1,6 @@
 package br.com.duxusdesafio.service;
 
+import br.com.duxusdesafio.model.ComposicaoTime;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
@@ -7,15 +8,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
  * solicitados no desafio!
- *
- * OBS ao candidato: PREFERENCIALMENTE, NÃO ALTERE AS ASSINATURAS DOS MÉTODOS!
- * Trabalhe com a proposta pura.
- *
- * @author carlosau
  */
 @Service
 public class ApiService {
@@ -24,8 +21,10 @@ public class ApiService {
      * Vai retornar um Time, com a composição do time daquela data
      */
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        return todosOsTimes.stream()
+                .filter(time -> time.getData().equals(data))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -33,8 +32,17 @@ public class ApiService {
      * dentro do período
      */
     public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        Map<Integrante, Long> contagem = todosOsTimes.stream()
+                .filter(t -> (dataInicial == null || !t.getData().isBefore(dataInicial)))
+                .filter(t -> (dataFinal == null || !t.getData().isAfter(dataFinal)))
+                .flatMap(t -> t.getComposicaoTime().stream())
+                .map(ComposicaoTime::getIntegrante)
+                .collect(Collectors.groupingBy(i -> i, Collectors.counting()));
+
+        return contagem.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
 
     /**

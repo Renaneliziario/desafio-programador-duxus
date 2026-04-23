@@ -1,0 +1,6 @@
+br/com/duxusdesafio/model/ComposicaoTime.class
+br/com/duxusdesafio/model/Time.class
+br/com/duxusdesafio/DuxusdesafioApplication.class
+br/com/duxusdesafio/ServletInitializer.class
+br/com/duxusdesafio/model/Integrante.class
+br/com/duxusdesafio/service/ApiService.class
