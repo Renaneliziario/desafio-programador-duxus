@@ -1,3 +1,20 @@
-# Default ignored files
+# IDE e Maven
+target/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.factorypath
+
+# Segredos e Configurações de Ambiente (Mandatório Sênior)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs e Temporários
+*.log
 /shelf/
 /.idea/workspace.xml
