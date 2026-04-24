@@ -1,10 +1,13 @@
 package br.com.duxusdesafio.controller;
 
+import br.com.duxusdesafio.dto.IntegranteResponseDTO;
 import br.com.duxusdesafio.dto.TimeResponseDTO;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
 import br.com.duxusdesafio.repository.TimeRepository;
 import br.com.duxusdesafio.service.ApiService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dados")
+@Tag(name = "Processamento", description = "Endpoints para consulta de estatísticas e dados processados")
 public class ApiController {
 
     private final ApiService apiService;
@@ -30,8 +34,9 @@ public class ApiController {
     }
 
     @GetMapping("/time-da-data")
+    @Operation(summary = "Time da Data", description = "Retorna o time escalado em uma data específica")
     public TimeResponseDTO getTimeDaData(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+            @RequestParam(name = "data") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         Time time = apiService.timeDaData(data, todosOsTimes);
@@ -46,27 +51,34 @@ public class ApiController {
     }
 
     @GetMapping("/integrante-mais-usado")
-    public Integrante getIntegranteMaisUsado(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+    @Operation(summary = "Integrante Mais Usado", description = "Identifica o integrante que apareceu no maior número de times no período")
+    public IntegranteResponseDTO getIntegranteMaisUsado(
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
-        return apiService.integranteMaisUsado(dataInicial, dataFinal, todosOsTimes);
+        Integrante integrante = apiService.integranteMaisUsado(dataInicial, dataFinal, todosOsTimes);
+        
+        if (integrante == null) return null;
+        
+        return new IntegranteResponseDTO(integrante.getId(), integrante.getNome(), integrante.getFuncao());
     }
 
     @GetMapping("/integrantes-do-time-mais-recorrente")
+    @Operation(summary = "Time Mais Recorrente", description = "Retorna os nomes dos integrantes do time que mais se repetiu no período")
     public List<String> getIntegrantesDoTimeMaisRecorrente(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         return apiService.integrantesDoTimeMaisRecorrente(dataInicial, dataFinal, todosOsTimes);
     }
 
     @GetMapping("/funcao-mais-recorrente")
+    @Operation(summary = "Função Mais Recorrente", description = "Identifica a função com maior número de integrantes únicos no período")
     public Map<String, String> getFuncaoMaisRecorrente(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         String funcao = apiService.funcaoMaisRecorrente(dataInicial, dataFinal, todosOsTimes);
@@ -74,9 +86,10 @@ public class ApiController {
     }
 
     @GetMapping("/clube-mais-recorrente")
+    @Operation(summary = "Clube Mais Recorrente", description = "Identifica o nome do clube mais comum no período")
     public Map<String, String> getClubeMaisRecorrente(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         String clube = apiService.clubeMaisRecorrente(dataInicial, dataFinal, todosOsTimes);
@@ -84,18 +97,20 @@ public class ApiController {
     }
 
     @GetMapping("/contagem-de-clubes")
+    @Operation(summary = "Contagem de Clubes", description = "Retorna o número de aparições de cada clube no período")
     public Map<String, Long> getContagemDeClubesNoPeriodo(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         return apiService.contagemDeClubesNoPeriodo(dataInicial, dataFinal, todosOsTimes);
     }
 
     @GetMapping("/contagem-por-funcao")
+    @Operation(summary = "Contagem por Função", description = "Retorna o número de integrantes únicos em cada função no período")
     public Map<String, Long> getContagemPorFuncao(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+            @RequestParam(name = "dataInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(name = "dataFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
         
         List<Time> todosOsTimes = timeRepository.findAll();
         return apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);

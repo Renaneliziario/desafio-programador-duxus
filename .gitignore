@@ -7,7 +7,7 @@ target/
 .settings/
 .factorypath
 
-# Segredos e Configurações de Ambiente (Mandatório Sênior)
+# Segredos e Configurações de Ambiente
 .env
 .env.local
 .env.development.local

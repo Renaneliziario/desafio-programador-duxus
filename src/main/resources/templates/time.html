@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Montagem de Time</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            margin: 0; 
+            background-color: #f4f4f9; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container { 
+            width: 100%;
+            max-width: 500px; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+        }
+        h2 { color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="date"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        .integrante-item { background: #eee; margin: 5px 0; padding: 10px; border-radius: 4px; display: flex; align-items: center; }
+        .integrante-item input { margin-right: 10px; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        button:hover { background-color: #0069d9; }
+        #message { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; }
+        .success { background-color: #d4edda; color: #155724; display: block !important; }
+        .error { background-color: #f8d7da; color: #721c24; display: block !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Montar Time</h2>
+        <form id="timeForm">
+            <div class="form-group">
+                <label>Nome do Clube:</label>
+                <input type="text" id="nomeDoClube" required>
+            </div>
+            <div class="form-group">
+                <label>Data:</label>
+                <input type="date" id="data" required>
+            </div>
+            <label>Selecione os Integrantes:</label>
+            <div th:each="i : ${integrantes}" class="integrante-item">
+                <input type="checkbox" name="integrantes" th:value="${i.id}">
+                <span th:text="${i.nome + ' (' + i.funcao + ')'}"></span>
+            </div>
+            <button type="submit">Escalar Time</button>
+        </form>
+        <div id="message"></div>
+        <br>
+        <a href="/telas/integrantes">Voltar para Cadastro de Integrantes</a>
+    </div>
+
+    <script>
+        document.getElementById('timeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nomeDoClube = document.getElementById('nomeDoClube').value;
+            const data = document.getElementById('data').value;
+            const checkboxes = document.querySelectorAll('input[name="integrantes"]:checked');
+            const integrantesIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            const msgDiv = document.getElementById('message');
+
+            if (integrantesIds.length === 0) {
+                msgDiv.textContent = 'Selecione pelo menos um integrante.';
+                msgDiv.className = 'error';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/cadastro/time', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nomeDoClube, data, integrantesIds })
+                });
+
+                if (response.ok) {
+                    msgDiv.textContent = 'Sucesso! Time escalado.';
+                    msgDiv.className = 'success';
+                    document.getElementById('timeForm').reset();
+                } else {
+                    const errorData = await response.json();
+                    msgDiv.textContent = 'Erro: ' + (errorData.message || 'Falha ao escalar.');
+                    msgDiv.className = 'error';
+                }
+            } catch (error) {
+                msgDiv.textContent = 'Erro de conexão.';
+                msgDiv.className = 'error';
+            }
+        });
+    </script>
+</body>
+</html>
