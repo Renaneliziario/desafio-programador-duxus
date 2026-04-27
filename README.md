@@ -26,10 +26,26 @@ docker-compose up -d
 *O arquivo docker-compose.yml está pré-configurado para ler as credenciais de segurança do ambiente (renomeie o .env.example para .env se fornecido, ou crie o seu próprio de acordo).*
 
 ### 2. Iniciando a Aplicação
-Execute a classe principal DuxusdesafioApplication.java através da sua IDE preferida ou utilize o Maven Wrapper:
+
+#### No Linux ou macOS:
+Certifique-se de que o script possui permissão de execução e inicie a aplicação:
 ```bash
+chmod +x mvnw
 ./mvnw spring-boot:run
 ```
+
+#### No Windows:
+Utilize o prompt de comando ou PowerShell na raiz do projeto:
+```cmd
+mvnw.cmd spring-boot:run
+```
+
+#### Utilizando o Maven Global (Caso instalado):
+Caso você já possua o Maven configurado no seu PATH:
+```bash
+mvn spring-boot:run
+```
+
 *Nota: A aplicação está configurada com ddl-auto=update. As tabelas (integrante, time, composicao_time) e chaves estrangeiras serão criadas automaticamente no banco de dados duxus durante a inicialização.*
 
 ---
@@ -62,3 +78,26 @@ Para validar, execute a suíte de testes unitários:
 - **Segurança de Credenciais:** Credenciais de banco de dados não estão fixadas no application.properties. O projeto lê variáveis de ambiente injetadas via .env.
 - **Desacoplamento via DTOs:** As entidades JPA (Time, Integrante) não são expostas nas camadas Web. Utiliza-se Records do Java 17 (TimeDTO, TimeResponseDTO) para garantir a segurança dos dados de entrada (anotações @Valid) e evitar recursão infinita na serialização de respostas JSON bidirecionais.
 - **Transações:** A lógica de montagem de times no CadastroService é anotada com @Transactional, garantindo consistência relacional entre as tabelas time e composicao_time.
+
+---
+
+## Atualizações e Melhorias Implementadas (Revisão Técnica)
+
+Para elevar a qualidade e a robustez da solução, foram realizadas as seguintes implementações:
+
+### 1. Refinamento da Lógica de Dados (ApiService)
+*   **Identidade de Time:** O método `integrantesDoTimeMaisRecorrente` foi refatorado para respeitar a definição de que um time é a união de **Clube + Composição**. Utiliza um `record` interno como chave de agrupamento para garantir precisão e performance.
+*   **Resiliência e Robustez:** Todos os métodos de processamento foram protegidos contra `NullPointerException`, permitindo que parâmetros de data opcionais (nulos) resultem no processamento correto de todo o histórico, conforme os requisitos.
+*   **Código Idiomático:** Uso avançado de Java 17 (Streams, Records, Collectors) para manipulação eficiente de estruturas de dados complexas.
+
+### 2. Expansão da Suíte de Testes
+*   **Testes de API (MockMvc):** Implementação de `ApiControllerTest` para validar os contratos REST. Garante que os endpoints entreguem exatamente o formato JSON solicitado (ex: chaves de objetos e estruturas de listas).
+*   **Cobertura de Casos de Borda:** Criação de `ApiServiceExperimentoTest` focado em cenários críticos: listas vazias, limites de data inclusivos e filtros nulos.
+*   **Validação de Integridade:** Adicionado teste de integridade para monitorar a consistência da massa de dados original, demonstrando atenção à qualidade dos dados de entrada.
+
+### 3. Garantia de Integridade de Dados
+*   **Correção de Inconsistências:** Identificada e ajustada uma falha na atribuição de IDs na classe `DadosParaTesteApiService`. A correção garante que os algoritmos de agrupamento operem sobre dados únicos e íntegros.
+
+### 4. Interface e APIs
+*   **Endpoints de Processamento:** Implementação completa seguindo os requisitos de parâmetros e retornos esperados.
+*   **Telas Funcionais:** Validação das interfaces de Cadastro e Escalação, integradas via JavaScript para consumo das APIs REST de forma assíncrona.

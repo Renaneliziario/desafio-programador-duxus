@@ -3,9 +3,10 @@ br/com/duxusdesafio/repository/ComposicaoTimeRepository.class
 br/com/duxusdesafio/ServletInitializer.class
 br/com/duxusdesafio/dto/TimeResponseDTO.class
 br/com/duxusdesafio/model/Integrante.class
+br/com/duxusdesafio/service/ApiService$1TimeKey.class
 br/com/duxusdesafio/dto/IntegranteResponseDTO.class
-br/com/duxusdesafio/controller/ApiController.class
 br/com/duxusdesafio/service/CadastroService.class
+br/com/duxusdesafio/controller/ApiController.class
 br/com/duxusdesafio/model/ComposicaoTime.class
 br/com/duxusdesafio/controller/CadastroController.class
 br/com/duxusdesafio/repository/TimeRepository.class

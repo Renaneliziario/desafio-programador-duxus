@@ -5,6 +5,7 @@
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/dto/IntegranteResponseDTO.java
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/model/ComposicaoTime.java
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/repository/TimeRepository.java
+/home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/controller/view/ViewController.java
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/repository/IntegranteRepository.java
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/model/Integrante.java
 /home/renan/dev/desafio-programador-duxus/src/main/java/br/com/duxusdesafio/service/CadastroService.java

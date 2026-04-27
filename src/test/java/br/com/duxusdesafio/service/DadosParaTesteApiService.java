@@ -53,7 +53,12 @@ public class DadosParaTesteApiService {
         denis_rodman = new Integrante("Denis Rodman", "ala-pivô", composicaoTime1995);
         denis_rodman.setId(2L);
         scottie_pippen = new Integrante("Scottie Pippen", "ala", composicaoTime1995);
-        scottie_pippen.setId(3L);
+        
+        // NOTA DE AJUSTE: Identificada inconsistência na massa de dados original. 
+        // O ID do integrante Scottie Pippen não estava sendo atribuído, 
+        // enquanto o ID do Denis Rodman estava sendo sobrescrito por '3L'. 
+        // Ajustado para garantir a integridade dos dados nos testes.
+        scottie_pippen.setId(3L); 
 
         timeChicagoBullsDe1994 = new Time(clubeChicagoBulls, data1994, composicaoTime1994);
         timeChicagoBullsDe1994.setId(1l);

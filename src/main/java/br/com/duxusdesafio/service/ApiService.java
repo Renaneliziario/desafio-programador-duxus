@@ -6,6 +6,7 @@ import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,21 +52,24 @@ public class ApiService {
      * OBS: Time é o clube + composição em determinada data
      */
     public List<String> integrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
+        record TimeKey(String clube, List<String> integrantes) {}
+
         return todosOsTimes.stream()
-                .filter(time -> {
-                    LocalDate data = time.getData();
-                    return !data.isBefore(dataInicial) && !data.isAfter(dataFinal);
-                })
+                .filter(t -> (dataInicial == null || !t.getData().isBefore(dataInicial)))
+                .filter(t -> (dataFinal == null || !t.getData().isAfter(dataFinal)))
                 .collect(Collectors.groupingBy(
-                        time -> time.getComposicaoTime().stream()
-                                .map(ct -> ct.getIntegrante().getNome())
-                                .sorted()
-                                .collect(Collectors.toList()),
+                        time -> new TimeKey(
+                                time.getNomeDoClube(),
+                                time.getComposicaoTime().stream()
+                                        .map(ct -> ct.getIntegrante().getNome())
+                                        .sorted()
+                                        .collect(Collectors.toList())
+                        ),
                         Collectors.counting()
                 ))
                 .entrySet().stream()
                 .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
+                .map(entry -> entry.getKey().integrantes)
                 .orElse(Collections.emptyList());
     }
 

@@ -1,3 +1,5 @@
 /home/renan/dev/desafio-programador-duxus/src/test/java/br/com/duxusdesafio/service/TesteApiService.java
 /home/renan/dev/desafio-programador-duxus/src/test/java/br/com/duxusdesafio/DuxusdesafioApplicationTests.java
+/home/renan/dev/desafio-programador-duxus/src/test/java/br/com/duxusdesafio/service/ApiServiceExperimentoTest.java
+/home/renan/dev/desafio-programador-duxus/src/test/java/br/com/duxusdesafio/controller/ApiControllerTest.java
 /home/renan/dev/desafio-programador-duxus/src/test/java/br/com/duxusdesafio/service/DadosParaTesteApiService.java
