@@ -57,12 +57,22 @@ Para identificar repetições, o sistema considera a união do **Nome do Clube +
 
 ## 5. Estratégia de Qualidade
 
-A confiabilidade do sistema é garantida por diferentes níveis de testes automatizados:
+A confiabilidade do sistema é garantida por uma suíte de testes diversificada, cobrindo desde a lógica interna até a entrega final da API:
 
-1.  **Testes de Lógica**: Validam os algoritmos de cálculo e os filtros de período.
-2.  **Testes de Robustez (Edge Cases)**: Garantem que o sistema continue operando corretamente mesmo quando informações opcionais (como datas) não são fornecidas.
-3.  **Testes de Contrato**: Asseguram que a API entregue os dados exatamente no formato esperado pelo cliente.
-4.  **Testes de Integridade**: Verificam a consistência da carga inicial de dados, prevenindo erros causados por informações duplicadas ou incompletas.
+### 🧪 Testes de API (Contrato)
+Localização: `ApiControllerTest.java`  
+Utiliza **MockMvc** para simular requisições HTTP sem a necessidade de subir o servidor completo. O objetivo é garantir que o sistema respeite os "contratos" estabelecidos (nomes de campos no JSON, formatos de data e códigos de status HTTP).
+
+### 🧪 Testes de Casos de Borda e Robustez
+Localização: `ApiServiceExperimentoTest.java`  
+Focado em cenários que testam os limites do sistema, como:
+*   **Filtros Nulos**: Garante que o sistema processe o histórico completo quando datas não são fornecidas.
+*   **Coleções Vazias**: Valida se a aplicação lida corretamente com listas de times vazias sem gerar erros.
+*   **Limites de Data**: Confirma se os filtros de período são inclusivos.
+
+### 🧪 Testes de Integridade de Dados
+Localização: Incluído em `ApiServiceExperimentoTest.java`  
+Um teste especializado que monitora a consistência da massa de dados original. Ele detecta automaticamente se houver falhas na atribuição de IDs ou nomes duplicados, garantindo que o processamento estatístico ocorra sobre uma base de dados íntegra.
 
 ---
 
