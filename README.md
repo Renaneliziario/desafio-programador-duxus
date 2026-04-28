@@ -1,5 +1,7 @@
 # Desafio de Desenvolvimento Duxus - Sistema de Escalação
 
+> 📄 **Documentação Adicional:** [Arquitetura e Design do Sistema](docs/ARCHITECTURE.md)
+
 Este repositório contém a solução para o desafio técnico de escalação de times, englobando a lógica de processamento de dados em memória, persistência em banco de dados relacional e interfaces de usuário.
 
 ## Tecnologias Utilizadas
@@ -46,7 +48,13 @@ Caso você já possua o Maven configurado no seu PATH:
 mvn spring-boot:run
 ```
 
-*Nota: A aplicação está configurada com ddl-auto=update. As tabelas (integrante, time, composicao_time) e chaves estrangeiras serão criadas automaticamente no banco de dados duxus durante a inicialização.*
+#### Modo Simplificado (Sem Docker / Banco em Memória):
+Caso não queira configurar o PostgreSQL ou Docker, utilize o perfil H2 para rodar tudo em memória:
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=h2
+```
+
+*Nota: A aplicação está configurada com ddl-auto=update. As tabelas (integrante, time, composicao_time) e chaves estrangeiras serão criadas automaticamente durante a inicialização.*
 
 ---
 
@@ -83,16 +91,16 @@ Para validar, execute a suíte de testes unitários:
 
 ## Atualizações e Melhorias Implementadas (Revisão Técnica)
 
-Para elevar a qualidade e a robustez da solução, foram realizadas as seguintes implementações:
+Para elevar a qualidade e a robustez da solução, a implementação contempla os seguintes pontos:
 
 ### 1. Refinamento da Lógica de Dados (ApiService)
 *   **Identidade de Time:** O método `integrantesDoTimeMaisRecorrente` foi refatorado para respeitar a definição de que um time é a união de **Clube + Composição**. Utiliza um `record` interno como chave de agrupamento para garantir precisão e performance.
-*   **Resiliência e Robustez:** Todos os métodos de processamento foram protegidos contra `NullPointerException`, permitindo que parâmetros de data opcionais (nulos) resultem no processamento correto de todo o histórico, conforme os requisitos.
-*   **Código Idiomático:** Uso avançado de Java 17 (Streams, Records, Collectors) para manipulação eficiente de estruturas de dados complexas.
+*   **Resiliência e Robustez:** Todos os métodos de processamento possuem proteção contra `NullPointerException`, permitindo que parâmetros de data opcionais (nulos) resultem no processamento correto de todo o histórico, conforme os requisitos.
+*   **Código Idiomático:** Uso de Java 17 (Streams, Records, Collectors) para manipulação eficiente de estruturas de dados complexas.
 
 ### 2. Expansão da Suíte de Testes
-*   **Testes de API (MockMvc):** Implementação de `ApiControllerTest` para validar os contratos REST. Garante que os endpoints entreguem exatamente o formato JSON solicitado (ex: chaves de objetos e estruturas de listas).
-*   **Cobertura de Casos de Borda:** Criação de `ApiServiceExperimentoTest` focado em cenários críticos: listas vazias, limites de data inclusivos e filtros nulos.
+*   **Testes de API (MockMvc):** Inclusão de `ApiControllerTest` para validar os contratos REST. Garante que os endpoints entreguem exatamente o formato JSON solicitado (ex: chaves de objetos e estruturas de listas).
+*   **Cobertura de Casos de Borda:** Inclusão de `ApiServiceExperimentoTest` focado em cenários críticos: listas vazias, limites de data inclusivos e filtros nulos.
 *   **Validação de Integridade:** Adicionado teste de integridade para monitorar a consistência da massa de dados original, demonstrando atenção à qualidade dos dados de entrada.
 
 ### 3. Garantia de Integridade de Dados
@@ -100,4 +108,4 @@ Para elevar a qualidade e a robustez da solução, foram realizadas as seguintes
 
 ### 4. Interface e APIs
 *   **Endpoints de Processamento:** Implementação completa seguindo os requisitos de parâmetros e retornos esperados.
-*   **Telas Funcionais:** Validação das interfaces de Cadastro e Escalação, integradas via JavaScript para consumo das APIs REST de forma assíncrona.
+*   **Telas Funcionais:** Interfaces de Cadastro e Escalação validadas e integradas via JavaScript para consumo das APIs REST de forma assíncrona.
